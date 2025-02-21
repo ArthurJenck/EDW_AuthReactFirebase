@@ -18,8 +18,18 @@ const NavBar = () => {
         >
           Sign up
         </button>
-        <button className="btn btn-primary ms-2">Log in</button>
-        <button className="btn btn-danger ms-2">Log out</button>
+        <button
+          className="btn btn-primary ms-2"
+          onClick={() => toggleModals("login")}
+        >
+          Log in
+        </button>
+        <button
+          className="btn btn-danger ms-2"
+          onClick={() => toggleModals("close")}
+        >
+          Log out
+        </button>
       </div>
     </nav>
   )
