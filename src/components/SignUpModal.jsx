@@ -1,8 +1,31 @@
-import { useContext } from "react"
+import { useContext, useRef, useState } from "react"
 import { UserContext } from "../context/createContext"
 
 const SignUpModal = () => {
   const { modalState, toggleModals } = useContext(UserContext)
+  const [validation, setValidation] = useState("")
+
+  const inputs = useRef([])
+  const addInput = (el) => {
+    if (el && !inputs.current.includes(el)) {
+      inputs.current.push(el)
+    }
+  }
+
+  const handleForm = (e) => {
+    e.preventDefault()
+    setValidation("")
+
+    if (
+      (inputs.current[1].value.length || inputs.current[2].value.length) < 6
+    ) {
+      setValidation("6 characters min.")
+      return
+    } else if (inputs.current[1].value !== inputs.current[2].value) {
+      setValidation("Passwords do not match.")
+      return
+    }
+  }
 
   return (
     <>
@@ -27,7 +50,7 @@ const SignUpModal = () => {
                 </div>
 
                 <div className="modal-body">
-                  <form className="sign-up-form">
+                  <form className="sign-up-form" onSubmit={handleForm}>
                     <div className="mb-3">
                       <label htmlFor="signUpEmail" className="form-label">
                         Email adress
@@ -38,6 +61,7 @@ const SignUpModal = () => {
                         type="email"
                         className="form-control"
                         id="signUpEmail"
+                        ref={addInput}
                       />
                     </div>
 
@@ -51,6 +75,7 @@ const SignUpModal = () => {
                         type="password"
                         className="form-control"
                         id="signUpPwd"
+                        ref={addInput}
                       />
                     </div>
 
@@ -64,8 +89,9 @@ const SignUpModal = () => {
                         type="password"
                         className="form-control"
                         id="repeatPwd"
+                        ref={addInput}
                       />
-                      <p className="text-danger mt-1"></p>
+                      <p className="text-danger mt-1">{validation}</p>
                     </div>
                     <button className="btn btn-primary">Submit</button>
                   </form>
