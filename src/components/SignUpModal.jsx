@@ -55,7 +55,6 @@ const SignUpModal = () => {
                       />
                       <p className="text-danger mt-1"></p>
                     </div>
-
                     <button className="btn btn-primary">Submit</button>
                   </form>
                 </div>
