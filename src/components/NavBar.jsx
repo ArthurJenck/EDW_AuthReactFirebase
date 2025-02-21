@@ -1,9 +1,26 @@
 import { useContext } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { UserContext } from "../context/createContext"
+import { signOut } from "firebase/auth"
+import { auth } from "../firebase-config"
 
 const NavBar = () => {
   const { toggleModals } = useContext(UserContext)
+  const navigate = useNavigate()
+
+  const logOut = async () => {
+    try {
+      await signOut(auth)
+      navigate("/")
+    } catch (err) {
+      alert(
+        "For some reason, we cannot deconnect, please check your internet connection and retry."
+      )
+      console.error(err)
+
+      throw new Error("An error occurred: ", err.message)
+    }
+  }
 
   return (
     <nav className="navbar navbar-light bg-light px-4">
@@ -24,7 +41,9 @@ const NavBar = () => {
         >
           Log in
         </button>
-        <button className="btn btn-danger ms-2">Log out</button>
+        <button className="btn btn-danger ms-2" onClick={logOut}>
+          Log out
+        </button>
       </div>
     </nav>
   )
