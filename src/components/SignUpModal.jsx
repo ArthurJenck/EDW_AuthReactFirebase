@@ -2,8 +2,10 @@ import { useContext, useRef, useState } from "react"
 import { UserContext } from "../context/createContext"
 
 const SignUpModal = () => {
-  const { modalState, toggleModals } = useContext(UserContext)
+  const { modalState, toggleModals, signUp } = useContext(UserContext)
   const [validation, setValidation] = useState("")
+
+  const formRef = useRef(null)
 
   const inputs = useRef([])
   const addInput = (el) => {
@@ -12,7 +14,7 @@ const SignUpModal = () => {
     }
   }
 
-  const handleForm = (e) => {
+  const handleForm = async (e) => {
     e.preventDefault()
     setValidation("")
 
@@ -24,6 +26,19 @@ const SignUpModal = () => {
     } else if (inputs.current[1].value !== inputs.current[2].value) {
       setValidation("Passwords do not match.")
       return
+    }
+
+    try {
+      const cred = await signUp(
+        inputs.current[0].value,
+        inputs.current[1].value
+      )
+      formRef.current.reset()
+      setValidation("")
+      toggleModals("close")
+      console.log(cred)
+    } catch (err) {
+      console.error("An error occurred: ", err.message)
     }
   }
 
@@ -50,7 +65,11 @@ const SignUpModal = () => {
                 </div>
 
                 <div className="modal-body">
-                  <form className="sign-up-form" onSubmit={handleForm}>
+                  <form
+                    className="sign-up-form"
+                    onSubmit={handleForm}
+                    ref={formRef}
+                  >
                     <div className="mb-3">
                       <label htmlFor="signUpEmail" className="form-label">
                         Email adress
