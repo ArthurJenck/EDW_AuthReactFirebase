@@ -1,8 +1,10 @@
 import { useContext, useRef, useState } from "react"
 import { UserContext } from "../context/createContext"
+import { useNavigate } from "react-router-dom"
 
 const SignUpModal = () => {
   const { modalState, toggleModals, signUp } = useContext(UserContext)
+  const navigate = useNavigate()
   const [validation, setValidation] = useState("")
 
   const formRef = useRef(null)
@@ -40,6 +42,7 @@ const SignUpModal = () => {
         inputs.current[1].value
       )
       closeModal()
+      navigate("/private/home")
 
       return cred
     } catch (err) {
