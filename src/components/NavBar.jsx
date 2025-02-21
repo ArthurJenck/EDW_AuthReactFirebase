@@ -24,12 +24,7 @@ const NavBar = () => {
         >
           Log in
         </button>
-        <button
-          className="btn btn-danger ms-2"
-          onClick={() => toggleModals("close")}
-        >
-          Log out
-        </button>
+        <button className="btn btn-danger ms-2">Log out</button>
       </div>
     </nav>
   )
