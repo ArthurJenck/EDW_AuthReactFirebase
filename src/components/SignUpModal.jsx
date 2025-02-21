@@ -7,6 +7,12 @@ const SignUpModal = () => {
 
   const formRef = useRef(null)
 
+  const closeModal = () => {
+    formRef.current.reset()
+    setValidation("")
+    toggleModals("close")
+  }
+
   const inputs = useRef([])
   const addInput = (el) => {
     if (el && !inputs.current.includes(el)) {
@@ -33,12 +39,19 @@ const SignUpModal = () => {
         inputs.current[0].value,
         inputs.current[1].value
       )
-      formRef.current.reset()
-      setValidation("")
-      toggleModals("close")
-      console.log(cred)
+      closeModal()
+
+      return cred
     } catch (err) {
-      console.error("An error occurred: ", err.message)
+      if (err.code === "auth/invalid-email") {
+        setValidation("Email format invalid")
+      } else if (err.code === "auth/email-already-in-use") {
+        setValidation("Email already used")
+      } else {
+        setValidation(`Error: ${err.code}`)
+      }
+      console.error("An error occurred while signup: ", err.message)
+      throw new Error("Error while signup:", err)
     }
   }
 
@@ -48,7 +61,7 @@ const SignUpModal = () => {
         <div className="position-fixed top-0 vw-100 vh-100">
           <div
             className="w-100 h-100 bg-dark bg-opacity-75"
-            onClick={() => toggleModals("close")}
+            onClick={closeModal}
           ></div>
           <div
             className="position-absolute top-50 start-50 translate-middle"
@@ -58,10 +71,7 @@ const SignUpModal = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Sign Up</h5>
-                  <button
-                    className="btn-close"
-                    onClick={() => toggleModals("close")}
-                  ></button>
+                  <button className="btn-close" onClick={closeModal}></button>
                 </div>
 
                 <div className="modal-body">
